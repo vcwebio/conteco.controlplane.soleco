@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+(
+	export PATH="$CONTECO_EXECUTIONPLANE_APIINTERNALPATH_MODECO"
+	. executionplane-invoke "$0 $@"
+	imageName="${@: -1}"
+	rootPath="/conteco/pwd/${imageName}"
+	. $rootPath/environment
+
+	. $rootPath/settings
+	if [[ $# -gt 2 ]] ; then
+		stackName="$2"
+	else
+		stackName="all"
+	fi
+	case $1 in
+		boot)
+			bootStacks="${CONTECO_DC_GLOBAL_BOOTSTACKS}"
+			IFS=',' read -r -a stacks <<< "$bootStacks"
+			for stack in ${stacks[@]};
+			do
+				if [[ " all $stack "  == *"$stackName"* ]] ; then
+					deploy $stack up "${imageName}"
+				fi
+			done;
+		;;
+		pause)
+			executionplane-error "Method not implemented: $1."
+		;;
+		reboot)
+			run shutdown ${@:2:$#-1}
+			run boot ${@:2:$#-1}
+		;;
+		restart)
+			run stop ${@:2:$#-1}
+			run start ${@:2:$#-1}
+		;;
+		resume)
+			executionplane-error "Method not implemented: $1."
+		;;
+		shutdown)
+			bootStacks="${CONTECO_DC_GLOBAL_BOOTSTACKS}"
+			IFS=',' read -r -a stacks <<< "$bootStacks"
+			for stack in ${stacks[@]};
+			do
+				if [[ " all $stack "  == *"$stackName"* ]] ; then
+					deploy $stack down "${imageName}"
+				fi
+			done;
+		;;
+		start)
+			runStacks="${CONTECO_DC_GLOBAL_RUNSTACKS}"
+			IFS=',' read -r -a stacks <<< "$runStacks"
+			for stack in ${stacks[@]};
+			do
+				if [[ " all $stack "  == *"$stackName"* ]] ; then
+					deploy $stack up "${imageName}"
+				fi
+			done;
+		;;
+		stop)
+			runStacks="${CONTECO_DC_GLOBAL_RUNSTACKS}"
+			IFS=',' read -r -a stacks <<< "$runStacks"
+			for stack in ${stacks[@]};
+			do
+				if [[ " all $stack "  == *"$stackName"* ]] ; then
+					deploy $stack down "${imageName}"
+				fi
+			done;
+		;;
+		*)
+			.base run $@
+		;;
+	esac
+  executionplane-complete
+)

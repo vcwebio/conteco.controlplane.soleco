@@ -3,25 +3,24 @@
 	export PATH="$CONTECO_EXECUTIONPLANE_APIINTERNALPATH_SOLECO"
 	. executionplane-invoke "$0 $@"
 	imageName="${@: -1}"
-	rootPath="/conteco/pwd/${imageName}"
 	. invoke-script $imageName environment
 
-	. $rootPath/settings
 	if [[ $# -gt 2 ]] ; then
-		stackName="$2"
-	else
-		stackName="all"
+		component="$2"
 	fi
+	if [[ "$component" == "" ]] ; then
+		component="/"
+	elif [[ "$component" != "/"* ]] ; then
+		component="/${component}/"
+	fi
+
+	if [[ $# -gt 3 ]] ; then
+		stackName="$3"
+	fi
+
 	case $1 in
-		boot)
-			bootStacks="${CONTECO_DC_GLOBAL_BOOTSTACKS}"
-			IFS=',' read -r -a stacks <<< "$bootStacks"
-			for stack in ${stacks[@]};
-			do
-				if [[ " all $stack "  == *"$stackName"* ]] ; then
-					deploy $stack up "${imageName}"
-				fi
-			done;
+		boot|shutdown|start|stop)
+			run-stack $imageName $1 $component $stackName
 		;;
 		pause)
 			executionplane-error "Method not implemented: $1."
@@ -36,36 +35,6 @@
 		;;
 		resume)
 			executionplane-error "Method not implemented: $1."
-		;;
-		shutdown)
-			bootStacks="${CONTECO_DC_GLOBAL_BOOTSTACKS}"
-			IFS=',' read -r -a stacks <<< "$bootStacks"
-			for stack in ${stacks[@]};
-			do
-				if [[ " all $stack "  == *"$stackName"* ]] ; then
-					deploy $stack down "${imageName}"
-				fi
-			done;
-		;;
-		start)
-			runStacks="${CONTECO_DC_GLOBAL_RUNSTACKS}"
-			IFS=',' read -r -a stacks <<< "$runStacks"
-			for stack in ${stacks[@]};
-			do
-				if [[ " all $stack "  == *"$stackName"* ]] ; then
-					deploy $stack up "${imageName}"
-				fi
-			done;
-		;;
-		stop)
-			runStacks="${CONTECO_DC_GLOBAL_RUNSTACKS}"
-			IFS=',' read -r -a stacks <<< "$runStacks"
-			for stack in ${stacks[@]};
-			do
-				if [[ " all $stack "  == *"$stackName"* ]] ; then
-					deploy $stack down "${imageName}"
-				fi
-			done;
 		;;
 		*)
 			.base run $@

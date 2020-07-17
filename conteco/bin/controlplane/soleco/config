@@ -3,24 +3,41 @@
 	export PATH="$CONTECO_EXECUTIONPLANE_APIINTERNALPATH_SOLECO"
 	. executionplane-invoke "$0 $@"
 	imageName="${@: -1}"
-	rootPath="/conteco/pwd/${imageName}"
 	. invoke-script $imageName environment
+
+	if [[ $# -gt 2 ]] ; then
+		component="$2"
+	fi
+	if [[ "$component" == "" ]] ; then
+		component="/"
+	elif [[ "$component" != "/"* ]] ; then
+		component="/${component}/"
+	fi
+	rootPath="/conteco/pwd/${imageName}/soleco${component}"
+
 	command=$1
 	shift
 	case $command in
-		module-base)
-			config-module-base $rootPath
+		all)
+			config build $@
+			if [[  " backup " != *"$CONTECO_TYPE"* ]] ; then
+				config module $@
+				config component $@
+				config deploy $@
+				config volume $@
+			fi
+		;;
+		component)
+			config-component $rootPath
+		;;
+		deploy)
+			config-deploy $rootPath
 		;;
 		module)
 			config-module $rootPath
 		;;
 		volume)
-			if [[ $# -gt 1 ]] ; then
-				volumeName=$1
-			else
-				volumeName="all"
-			fi
-			config-volume $volumeName $rootPath
+			config-volume $imageName $rootPath $stack
 		;;
 		*)
 			.base config $command $@

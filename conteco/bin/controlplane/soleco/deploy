@@ -3,65 +3,35 @@
 	export PATH="$CONTECO_EXECUTIONPLANE_APIINTERNALPATH_SOLECO"
 	. executionplane-invoke "$0 $@"
 	imageName="${@: -1}"
-	rootPath="/conteco/pwd/${imageName}"
 	. invoke-script $imageName environment
+	if [[ " up down downup local-up local-down local-downup --info " != *"$1"* ]] ; then
+		method="up"
+	else
+		method="$1"
+		shift
+	fi
 
-	case $1 in
+	if [[ "$1" != "$imageName" ]] ; then
+		component="$1"
+	fi
+	if [[ "$component" == "" ]] ; then
+		component="/"
+	elif [[ "$component" != "/"* ]] ; then
+	  component="/${component}/"
+	fi
+
+	case $method in
 		--info)
-			.base run $@
+			executionplane-error "No implementation for modeco deploy --info: $@"
+		;;
+		down|downup|up)
+			deploy-component $method $imageName $component
+		;;
+		local-down|local-downup|local-up)
+			deploy-component-local $method  $imageName $component
 		;;
 		*)
-			if [[ $# -gt 2 ]] ; then
-				item=$1
-				command=$2
-				shift
-				shift
-			elif [[ $# -gt 1 ]] ; then
-				item=$1
-				command="up"
-				shift
-			else
-				item="module"
-				command="up"
-			fi
-			. $rootPath/settings.base
-			. $rootPath/settings
-			if [[ "$item" == "module" ]] ; then
-				# prepare the swarm node for stack deploy
-				case $command in
-					down)
-						deploy-module-down $rootPath
-						;;
-					downup)
-						deploy-module-down $rootPath
-						deploy-module-up $rootPath
-						;;
-					up)
-						deploy-module-up $rootPath
-						;;
-					*)
-						executionplane-error "Method not implemented: ${CONTECO_NAME} $command."
-						;;
-				esac
-			else
-				composefile="$rootPath/stacks/$item.docker-compose.yml"
-				stackName="${CONTECO_TYPE}_$(echo $item | tr '.-' '_' )"
-				case $command in
-					down)
-						executionplane docker stack remove $stackName
-						;;
-					downup)
-						executionplane docker stack remove $stackName
-						deploy-up $stackName $composefile
-						;;
-					up)
-						deploy-up $stackName $composefile
-						;;
-					*)
-						executionplane-error "Method not implemented: ${CONTECO_NAME} $command."
-						;;
-				esac
-			fi
+			executionplane-error "invalid API method: $method"
 		;;
 	esac
 	executionplane-complete

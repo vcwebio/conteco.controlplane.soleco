@@ -5,7 +5,7 @@ component="$3"
 stackName="$4"
 
 # local and global network prefix
-. set-config $component
+. set-config $imageName $component
 
 if [[ "$stackName" == "_"* ]] ; then
 	stackSelector="$stackName"

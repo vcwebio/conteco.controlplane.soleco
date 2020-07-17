@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+imageName=$1
+component=$2
+componentPath="/conteco/pwd/${imageName}/soleco${component}"
+basePath="$componentPath/_component"
+
+. set-config $imageName $component
+
+DOLLAR='$'
+
+echo $'#!/usr/bin/env bash\n\n' > $basePath/deploy-local-down
+echo $'#!/usr/bin/env bash\n\n' > $basePath/deploy-local-up
+
+echo "
+executionplane --silent docker container prune --force
+" >> $basePath/deploy-local-down
+
+IFS=$'\n' read -d '' -r -a volumes < $basePath/volumes
+for volume in ${volumes[@]};
+do
+	#	executionplane --silent docker volume rm --force ${volume}
+	echo "continue=\"true\"
+while [[ \"true\" == \"${DOLLAR}continue\" ]] ;
+do
+	executionplane docker volume rm \"${SOLECO_MODULEPREFIX}_${volume}\"
+	result=${DOLLAR}(docker volume ls | grep \"${SOLECO_MODULEPREFIX}_${volume}\")
+	if [[ \"${DOLLAR}result\" == \"\" ]] ; then
+		continue=\"false\"
+	else
+		sleep 3;
+	fi
+done;
+	" >> $basePath/deploy-local-down
+echo "	executionplane --silent docker volume create ${SOLECO_MODULEPREFIX}_${volume}
+	" >> $basePath/deploy-local-up
+done;
+
+IFS=$'\n' read -d '' -r -a volumes < $basePath/volumes-initialised
+for volumeSettings in ${volumes[@]};
+do
+	volumeName=$(echo $volumeSettings | cut -d':' -f 1)
+	volumeDir=$(echo $volumeSettings | cut -d':' -f 2)
+	if [[ -d "$basePath/${volumeName}" ]] ; then
+		echo "executionplane --silent docker run -v ${SOLECO_MODULEPREFIX}_${volumeName}:${volumeDir} ${DOLLAR}{CONTECO_REGISTRY}${DOLLAR}1 --interactive cp -r /soleco${component}_component/${volumeName}/* ${volumeDir}
+		" >> $basePath/deploy-local-up
+	else
+		echo "executionplane --silent docker run -v ${SOLECO_MODULEPREFIX}_${volumeName}:${volumeDir} ${DOLLAR}{CONTECO_REGISTRY}${DOLLAR}1 --interactive tar -C / -xvf /soleco${component}_component/${volumeName}.tar
+		" >> $basePath/deploy-local-up
+	fi
+done;
+
+chmod -R 777 $componentPath

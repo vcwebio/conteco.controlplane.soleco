@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-component="$1"
+imageName="$1"
+component="$2"
 
 . invoke-script $imageName soleco/configuration
 . invoke-script $imageName soleco${component}_component/configuration

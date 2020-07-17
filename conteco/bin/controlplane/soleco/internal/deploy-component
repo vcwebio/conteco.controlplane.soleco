@@ -4,7 +4,7 @@ imageName="$2"
 component="$3"
 
 # local and global network prefix
-. set-config $component
+. set-config $imageName $component
 
 # create module overlay network - global
 if [[ "$method" == *"down"* ]] ; then

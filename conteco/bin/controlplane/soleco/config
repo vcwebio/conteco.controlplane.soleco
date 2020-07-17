@@ -13,7 +13,6 @@
 	elif [[ "$component" != "/"* ]] ; then
 		component="/${component}/"
 	fi
-	rootPath="/conteco/pwd/${imageName}/soleco${component}"
 
 	command=$1
 	shift
@@ -28,16 +27,16 @@
 			fi
 		;;
 		component)
-			config-component $rootPath
+			config-component $imageName $component
 		;;
 		deploy)
-			config-deploy $rootPath
+			config-deploy $imageName $component
 		;;
 		module)
-			config-module $rootPath
+			config-module $imageName $component
 		;;
 		volume)
-			config-volume $imageName $rootPath $stack
+			config-volume $imageName $component
 		;;
 		*)
 			.base config $command $@

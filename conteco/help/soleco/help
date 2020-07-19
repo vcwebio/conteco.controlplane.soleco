@@ -1,0 +1,15 @@
+#
+#
+# controlplane.soleco
+#
+# A controlplane gives access to an API that consists of 7 sections: console, repo, config, build, release, deploy and run.
+# Not all controlplanes require the full API for their operations.
+#
+# The soleco controlplane is concerned with the configuration and running of containerised solutions.
+# The name soleco stands for solution ecosystem.
+#
+# It provides full implementation for repo, build, release, deploy and run and partial implementation of config and console.
+# There is no implementation for run.
+#
+# Each to level API method implements the --info flag returning information relevant to the API method about the image.
+#

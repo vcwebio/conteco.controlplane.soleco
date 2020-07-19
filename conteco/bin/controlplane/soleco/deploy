@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+(
+	export PATH="$CONTECO_EXECUTIONPLANE_APIINTERNALPATH_SOLECO"
+	. executionplane-invoke "$0 $@"
+	imageName="${@: -1}"
+	. invoke-script $imageName environment
+	if [[ " up down downup local-up local-down local-downup --info " != *"$1"* ]] ; then
+		method="up"
+	else
+		method="$1"
+		shift
+	fi
+
+	if [[ "$1" != "$imageName" ]] ; then
+		component="$1"
+	fi
+	if [[ "$component" == "" ]] ; then
+		component="/"
+	elif [[ "$component" != "/"* ]] ; then
+	  component="/${component}/"
+	fi
+
+	case $method in
+		--info)
+			executionplane-error "No implementation for modeco deploy --info: $@"
+		;;
+		down|downup|up)
+			deploy-component $method $imageName $component
+		;;
+		local-down|local-downup|local-up)
+			deploy-component-local $method  $imageName $component
+		;;
+		*)
+			executionplane-error "invalid API method: $method"
+		;;
+	esac
+	executionplane-complete
+)

@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+(
+	export PATH="$CONTECO_EXECUTIONPLANE_APIINTERNALPATH_SOLECO"
+	. executionplane-invoke "$0 $@"
+	imageName="${@: -1}"
+	. invoke-script $imageName environment
+
+	if [[ $# -gt 2 ]] ; then
+		component="$2"
+	fi
+	if [[ "$component" == "" ]] ; then
+		component="/"
+	elif [[ "$component" != "/"* ]] ; then
+		component="/${component}/"
+	fi
+
+	if [[ $# -gt 3 ]] ; then
+		stackName="$3"
+	fi
+
+	case $1 in
+		boot|shutdown|start|stop)
+			run-stack $imageName $1 $component $stackName
+		;;
+		pause)
+			executionplane-error "Method not implemented: $1."
+		;;
+		reboot)
+			run shutdown ${@:2:$#-1}
+			run boot ${@:2:$#-1}
+		;;
+		restart)
+			run stop ${@:2:$#-1}
+			run start ${@:2:$#-1}
+		;;
+		resume)
+			executionplane-error "Method not implemented: $1."
+		;;
+		*)
+			.base run $@
+		;;
+	esac
+  executionplane-complete
+)

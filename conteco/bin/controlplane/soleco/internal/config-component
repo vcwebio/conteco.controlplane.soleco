@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+imageName=$1
+component=$2
+componentPath="/conteco/pwd/${imageName}/soleco${component}"
+
+. invoke-script $imageName "soleco${component}_configuration/configuration"
+
+if [[ ! -d ${componentPath}/_component ]] ; then
+	mkdir ${componentPath}/_component
+fi
+
+# copy module to component
+cp -r ${componentPath}_module/* ${componentPath}/_component
+
+# put copy of stacks in _configuration if none present
+if [[ ! -f ${componentPath}_configuration/stacks ]] ; then
+	cp ${componentPath}_module/stacks ${componentPath}_configuration/stacks
+fi
+
+chmod -R 777 $componentPath

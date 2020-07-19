@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+method="$1"
+imageName="$2"
+component="$3"
+
+# execute local deploy script
+if [[ "$method" == *"down"* ]] ; then
+  . invoke-script $imageName soleco${component}_component/deploy-local-down "$imageName"
+fi
+if [[ "$method" == *"up"* ]] ; then
+  . invoke-script $imageName soleco${component}_component/deploy-local-up "$imageName"
+fi

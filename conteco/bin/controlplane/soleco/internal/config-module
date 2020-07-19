@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+imageName=$1
+component=$2
+componentPath="/conteco/pwd/${imageName}/soleco${component}"
+
+. invoke-script $imageName "soleco${component}_configuration/configuration"
+
+if [[ ! -d ${componentPath}/_module ]] ; then
+	mkdir ${componentPath}/_module
+fi
+if [[ ! -d ${componentPath}/_import ]] ; then
+	mkdir ${componentPath}/_import
+fi
+tmpFolder="${componentPath}/_import"
+
+# copy modeco folder from module
+moduleImage="${CONTECO_REGISTRY}${CONTECO_REALM_RUNTIME}/modeco.${SOLECO_MODULE}"
+if [[ "$SOLECO_MODULE_VERSION" != "" ]] ; then
+	moduleImage="${moduleImage}:${SOLECO_MODULE}"
+fi
+docker run -v ${CONTECO_PWD_VOLUME}:/conteco/pwd $moduleImage --interactive cp -r /modeco/* $tmpFolder
+
+# copy module packages
+rm $tmpFolder/packages/*/*.conteco
+cp -r $tmpFolder/packages/*/* ${componentPath}_module
+
+# copy module volumes
+rm -rf $tmpFolder/volumes/packages
+cp -r $tmpFolder/volumes/* ${componentPath}_module
+
+# copy module configuration files
+cp $tmpFolder/configuration ${componentPath}/_module/configuration
+cp $tmpFolder/module-stacks ${componentPath}/_module/stacks
+cp $tmpFolder/module-volumes ${componentPath}/_module/volumes
+cp $tmpFolder/module-volumes-initialised ${componentPath}/_module/volumes-initialised
+
+rm -rf $tmpFolder
+chmod -R 777 $componentPath

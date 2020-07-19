@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+(
+	export PATH="$CONTECO_EXECUTIONPLANE_APIINTERNALPATH_SOLECO"
+	. executionplane-invoke "$0 $@"
+	imageName="${@: -1}"
+	. invoke-script $imageName environment
+
+	if [[ $# -gt 2 ]] ; then
+		component="$2"
+	fi
+	if [[ "$component" == "" ]] ; then
+		component="/"
+	elif [[ "$component" != "/"* ]] ; then
+		component="/${component}/"
+	fi
+
+	command=$1
+	shift
+	case $command in
+		all)
+			config build $@
+			if [[  " backup " != *"$CONTECO_TYPE"* ]] ; then
+				config module $@
+				config component $@
+				config deploy $@
+				config volume $@
+			fi
+		;;
+		component)
+			config-component $imageName $component
+		;;
+		deploy)
+			config-deploy $imageName $component
+		;;
+		module)
+			config-module $imageName $component
+		;;
+		volume)
+			config-volume $imageName $component
+		;;
+		*)
+			.base config $command $@
+    ;;
+	esac
+  executionplane-complete
+)

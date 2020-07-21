@@ -6,12 +6,7 @@
 	. invoke-script $imageName environment
 
 	if [[ $# -gt 2 ]] ; then
-		component="$2"
-	fi
-	if [[ "$component" == "" ]] ; then
-		component="/"
-	elif [[ "$component" != "/"* ]] ; then
-		component="/${component}/"
+		component="${2}/"
 	fi
 
 	command=$1
@@ -33,7 +28,8 @@
 			config-deploy $imageName $component
 		;;
 		module)
-			config-module $imageName $component
+			config-module $imageName "soleco/${component}"
+			descendant "soleco/${component}" "|$component" $imageName config module
 		;;
 		volume)
 			config-volume $imageName $component

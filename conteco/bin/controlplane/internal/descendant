@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+parent="$1"
+target="${2:1}"
+imageName="$3"
+shift
+shift
+shift
+for folder in $imageName/$parent*
+do
+  if [[ -d $folder ]] ;  then
+    folderName="$(basename $folder)"
+    if [[ "$folderName" != "_"* ]] ; then
+      if [[ "$component" == "" ]] ; then
+        childComponent="$folderName"
+      else
+        childComponent="${target}/$folderName"
+      fi
+      $@ $childComponent $imageName
+    fi
+  fi
+done

@@ -2,9 +2,17 @@
 imageName="$1"
 component="$2"
 
+# use solution namespace suffix as prefix for local network and module prefix
+if [[ "${CONTECO_ECOSYSTEM_RUNTIME}" != "${CONTECO_NAME_CONTROLPLANE}" ]] ; then
+  prefix="${CONTECO_ECOSYSTEM_RUNTIME:${#CONTECO_NAME_CONTROLPLANE}+1}_"
+fi
+
+# solution level config overrides component
 . invoke-script $imageName soleco/configuration
 . invoke-script $imageName soleco${component}_component/configuration
 
-# modules have module level configuration
+# solutions have solution level configuration
 export CONTECO_NETWORKGLOBAL="${CONTECO_ECOSYSTEM_RUNTIME}"
-export CONTECO_NETWORKLOCAL="${SOLECO_MODULEPREFIX}"
+export CONTECO_NETWORKLOCAL="${prefix}${CONTECO_TYPE}_${CONTECO_NAME}"
+export SOLECO_MODULEPREFIX="${prefix}${CONTECO_TYPE}_${CONTECO_NAME}"
+export SOLECO_URLPREFIX="${CONTECO_TYPE}_${CONTECO_NAME}"

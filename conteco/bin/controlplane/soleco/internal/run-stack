@@ -2,20 +2,21 @@
 imageName="$1"
 action="$2"
 component="$3"
-stackName="$4"
+stackSelector="$4"
+
+echo "$imageName $action $component $stackSelector"
+
+folder="soleco"
+if [[ "$component" != "" ]] ; then folder="soleco/$component"; fi
 
 # local and global network prefix
 . set-config $imageName $component
 
-if [[ "$stackName" == "_"* ]] ; then
-	stackSelector="$stackName"
-else
-	stackSelector=",$stackName"
-fi
+if [[ "$stackSelector" != "" && "$stackSelector" != "_"* ]] ; then stackSelector=",$stackSelector"; fi
 
 tmpfilef=$(mktemp /tmp/extract-resource.XXXXXX)
 
-extract-resource $imageName "soleco${component}_component/stacks" $tmpfilef
+extract-resource $imageName "${folder}/_component/stacks" $tmpfilef
 cat $tmpfilef | grep "$action" | grep "$stackSelector" | while read -r line ; do
 		IFS=',' read -r -a columns <<< "$line"
 		(
@@ -28,7 +29,7 @@ cat $tmpfilef | grep "$action" | grep "$stackSelector" | while read -r line ; do
 			export CONTECO_URLPREFIX="${SOLECO_URLPREFIX}/${instance}"
 			tmpfilep=$(mktemp /tmp/docker-compose.yml.XXXXXX)
 			tmpfile=$(mktemp /tmp/docker-compose.yml.XXXXXX)
-			stackFolder="soleco${component}_component/$instance"
+			stackFolder="${folder}/_component/$instance"
 			composeFile="$stackFolder/$stack.docker-compose.yml"
 			. invoke-script $imageName "$stackFolder/settings.package"
 			. invoke-script $imageName "$stackFolder/settings"

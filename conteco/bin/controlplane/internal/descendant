@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 imageName="$(echo "$1" | cut -d'|' -f 1)"
-prefix="$(echo "$1" | cut -d'|' -f 2)"
-component="$(echo "$1" | cut -d'|' -f 3)"
+component="$(echo "$1" | cut -d'|' -f 2)"
 shift
-for folder in $imageName/$prefix$component*
+
+if [[ "$component" == "" ]] ; then
+  parent="soleco";
+else
+  parent="soleco/$component";
+  prefix="$component/"
+fi
+
+for folder in $imageName/$parent/*
 do
   if [[ -d $folder ]] ;  then
     folderName="$(basename $folder)"
-    if [[ "$folderName" != "_"* ]] ; then
-      childComponent="$component$folderName"
-      $@ $childComponent $imageName
-    fi
+    if [[ "$folderName" != "_"* ]] ; then $@ "$prefix$folderName" $imageName; fi
   fi
 done

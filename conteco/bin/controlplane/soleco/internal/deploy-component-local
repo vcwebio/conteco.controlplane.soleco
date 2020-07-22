@@ -3,10 +3,13 @@ method="$1"
 imageName="$2"
 component="$3"
 
+folder="soleco"
+if [[ "$component" != "" ]] ; then folder="soleco/$component"; fi
+
 # execute local deploy script
 if [[ "$method" == *"down"* ]] ; then
-  . invoke-script $imageName soleco${component}_component/deploy-local-down "$imageName"
+  . invoke-script $imageName ${folder}/_component/deploy-local-down "$imageName"
 fi
 if [[ "$method" == *"up"* ]] ; then
-  . invoke-script $imageName soleco${component}_component/deploy-local-up "$imageName"
+  . invoke-script $imageName ${folder}/_component/deploy-local-up "$imageName"
 fi

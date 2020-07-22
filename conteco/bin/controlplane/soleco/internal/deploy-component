@@ -16,4 +16,5 @@ if [[ "$method" == *"up"* ]] ; then
 fi
 
 # create module package volumes - on all nodes
+echo "controlplane-service deploy local-$method $component $imageName"
 controlplane-service deploy "local-$method" "$component" "$imageName"

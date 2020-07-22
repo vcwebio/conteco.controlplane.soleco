@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
 imageName=$1
 component=$2
-componentPath="/conteco/pwd/${imageName}/${component}"
+
+folder="soleco"
+if [[ "$component" != "" ]] ; then folder="soleco/$component"; fi
+componentPath="/conteco/pwd/${imageName}/${folder}"
 
 # generate _component/configuration
-cp "${componentPath}_module/configuration" "${componentPath}_component/configuration"
-cat "${componentPath}_configuration/configuration" >> ${componentPath}_component/configuration
+cp "${componentPath}/_module/configuration" "${componentPath}/_component/configuration"
+cat "${componentPath}/_configuration/configuration" >> ${componentPath}/_component/configuration
 
 . set-config $imageName $component
 
-sourcePath="${componentPath}_module"
-altSourcePath="${componentPath}_configuration"
-destinationPath="${componentPath}_component"
+sourcePath="${componentPath}/_module"
+altSourcePath="${componentPath}/_configuration"
+destinationPath="${componentPath}/_component"
 
 IFS=',' read -r -a configFiles <<< "${MODECO_CONFIGURATION_FILES},${SOLECO_CONFIGURATION_FILES}"
 for configFile in ${configFiles[@]};

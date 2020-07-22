@@ -5,9 +5,7 @@
 	imageName="${@: -1}"
 	. invoke-script $imageName environment
 
-	if [[ $# -gt 2 ]] ; then
-		component="${2}/"
-	fi
+	if [[ $# -gt 2 ]] ; then component="${2}"; fi
 
 	command=$1
 	shift
@@ -22,20 +20,20 @@
 			fi
 		;;
 		component)
-			config-component $imageName "soleco/${component}"
-			descendant "$imageName|soleco/|$component" config component
+			config-component $imageName "${component}"
+			descendant "$imageName|$component" config component
 		;;
 		deploy)
-			config-deploy $imageName "soleco/${component}"
-			descendant "$imageName|soleco/|$component" config deploy
+			config-deploy $imageName "${component}"
+			descendant "$imageName|$component" config deploy
 		;;
 		module)
-			config-module $imageName "soleco/${component}"
-			descendant "$imageName|soleco/|$component" config module
+			config-module $imageName "${component}"
+			descendant "$imageName|$component" config module
 		;;
 		volume)
-			config-volume $imageName "soleco/${component}"
-			descendant "$imageName|soleco/|$component" config volume
+			config-volume $imageName "${component}"
+			descendant "$imageName|$component" config volume
 		;;
 		*)
 			.base config $command $@

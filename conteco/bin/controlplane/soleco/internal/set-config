@@ -9,7 +9,7 @@ fi
 
 # solution level config overrides component
 . invoke-script $imageName soleco/configuration
-. invoke-script $imageName soleco${component}_component/configuration
+. invoke-script $imageName ${component}_component/configuration
 
 # solutions have solution level configuration
 export CONTECO_NETWORKGLOBAL="${CONTECO_ECOSYSTEM_RUNTIME}"

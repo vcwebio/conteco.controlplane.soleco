@@ -22,17 +22,20 @@
 			fi
 		;;
 		component)
-			config-component $imageName $component
+			config-component $imageName "soleco/${component}"
+			descendant "$imageName|soleco/|$component" config component
 		;;
 		deploy)
-			config-deploy $imageName $component
+			config-deploy $imageName "soleco/${component}"
+			descendant "$imageName|soleco/|$component" config deploy
 		;;
 		module)
 			config-module $imageName "soleco/${component}"
-			descendant "soleco/${component}" "|$component" $imageName config module
+			descendant "$imageName|soleco/|$component" config module
 		;;
 		volume)
-			config-volume $imageName $component
+			config-volume $imageName "soleco/${component}"
+			descendant "$imageName|soleco/|$component" config volume
 		;;
 		*)
 			.base config $command $@

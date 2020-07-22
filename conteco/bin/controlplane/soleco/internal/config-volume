@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 imageName=$1
 component=$2
-componentPath="/conteco/pwd/${imageName}/soleco${component}"
+componentPath="/conteco/pwd/${imageName}/${component}"
 
 # generate _component/configuration
 cp "${componentPath}_module/configuration" "${componentPath}_component/configuration"

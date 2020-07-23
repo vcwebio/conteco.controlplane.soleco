@@ -2,6 +2,7 @@
 imageName="$1"
 component="$2"
 
+DOLLAR='$'
 # solution level config overrides component
 folder="soleco"
 . invoke-script $imageName ${folder}/configuration
@@ -17,7 +18,8 @@ if [[ "$component" != "" ]] ; then
   suffix="$(echo "/$component" | tr '/' '_')"
   urlSuffix="/$component";
 fi
+export MODECO_HOSTNAME="${SOLECO_HOSTNAME}"
 export CONTECO_NETWORKGLOBAL="${CONTECO_NAME_CONTROLPLANE}"
 export CONTECO_NETWORKLOCAL="${prefix}${CONTECO_TYPE}_${CONTECO_NAME}${suffix}"
-export SOLECO_MODULEPREFIX="${prefix}${CONTECO_TYPE}_${CONTECO_NAME}${suffix}"
-export SOLECO_URLPREFIX="${CONTECO_TYPE}_${CONTECO_NAME}${urlSuffix}"
+export MODECO_MODULEPREFIX="${prefix}${CONTECO_TYPE}_${CONTECO_NAME}${suffix}"
+export MODECO_URLPREFIX="${CONTECO_TYPE}_${CONTECO_NAME}${urlSuffix}"

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+shopt -s nullglob
 imageName=$1
 component=$2
 
@@ -10,20 +11,48 @@ componentPath="/conteco/pwd/${imageName}/${folder}"
 cp "${componentPath}/_module/configuration" "${componentPath}/_component/configuration"
 cat "${componentPath}/_configuration/configuration" >> ${componentPath}/_component/configuration
 
+if [[ -d ${componentPath}/_module/_configs ]] ; then
+  rm -rf ${componentPath}/_component/_configs/*
+  for f in ${componentPath}/_module/_configs/*
+	do
+    folderName="$(basename $f)"
+    mkdir ${componentPath}/_component/_configs/$folderName
+    if [[ -d ${componentPath}/_configuration/_configs/$folderName ]] ; then
+      cp ${componentPath}/_configuration/_configs/$folderName/* ${componentPath}/_component/_configs/$folderName
+    else
+      cp ${componentPath}/_module/_configs/$folderName/* ${componentPath}/_component/_configs/$folderName
+    fi
+  done;
+fi
+
 . set-config $imageName $component
 
-sourcePath="${componentPath}/_module"
-altSourcePath="${componentPath}/_configuration"
-destinationPath="${componentPath}/_component"
 
-IFS=',' read -r -a configFiles <<< "${MODECO_CONFIGURATION_FILES},${SOLECO_CONFIGURATION_FILES}"
-for configFile in ${configFiles[@]};
+# apply environment variables to all volume files
+sourcePath="${componentPath}/_component/_configs"
+destinationPath="${componentPath}/_component"
+IFS=$'\n' read -d '' -r -a volumes < $componentPath/_component/volumes-initialised
+for volumeSettings in ${volumes[@]};
 do
-  if [[ "$configFile" != "" ]] ; then
-    if [[ -f $altSourcePath/$configFile ]] ; then
-      cat $altSourcePath/$configFile | envsubst "${MODECO_CONFIGURATION_KEYS},${SOLECO_CONFIGURATION_KEYS}" > $destinationPath/$configFile
-    else
-      cat $sourcePath/$configFile | envsubst "${MODECO_CONFIGURATION_KEYS},${SOLECO_CONFIGURATION_KEYS}" > $destinationPath/$configFile
-    fi
-  fi
+	volumeName=$(echo $volumeSettings | cut -d':' -f 1)
+	for f in $sourcePath/$volumeName/*
+	do
+		level1="$(basename $f)"
+		if [[ -f $f ]] ; then cat $f | envsubst > $destinationPath/$volumeName/$level1;
+	  else
+			for g in $f/*
+			do
+				level2="$(basename $g)"
+				if [[ -f $g ]] ; then cat $g | envsubst > $destinationPath/$volumeName/$level1/$level2;
+			  else
+					for h in $g/*
+					do
+						level3="$(basename $h)"
+						if [[ -f $h ]] ; then cat $h | envsubst > $destinationPath/$volumeName/$level1/$level2/$level3;
+						else executionplane-error "$h: Environment variable substitution only up to 2 folder levels deep!"; fi
+				  done;
+				fi
+		  done;
+		fi
+	done;
 done;

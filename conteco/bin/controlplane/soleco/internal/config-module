@@ -38,5 +38,18 @@ cp $tmpFolder/module-stacks ${componentPath}/_module/stacks
 cp $tmpFolder/module-volumes ${componentPath}/_module/volumes
 cp $tmpFolder/module-volumes-initialised ${componentPath}/_module/volumes-initialised
 
+# iterate over initialised volumes and copy contents from configs folder into configs folder withinin _module
+# this gives a clean starting position
+IFS=$'\n' read -d '' -r -a volumes < ${componentPath}/_module/volumes-initialised
+for volumeSettings in ${volumes[@]};
+do
+	volumeName=$(echo $volumeSettings | cut -d':' -f 1)
+	if [[ ! -d ${componentPath}/_module/_configs ]] ; then mkdir ${componentPath}/_module/_configs; fi
+	if [[ -d $tmpFolder/configs/$volumeName ]] ; then
+		if [[ ! -d ${componentPath}/_module/_configs/$volumeName ]] ; then mkdir ${componentPath}/_module/_configs/$volumeName; fi
+		cp $tmpFolder/configs/$volumeName/* ${componentPath}/_module/_configs/$volumeName
+	fi
+done;
+
 rm -rf $tmpFolder
 chmod -R 777 $componentPath

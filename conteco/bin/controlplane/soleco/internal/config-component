@@ -21,4 +21,17 @@ if [[ ! -f ${componentPath}/_configuration/stacks ]] ; then
 	cp ${componentPath}/_module/stacks ${componentPath}/_configuration/stacks
 fi
 
+# copy configs folder to _configuration if not present
+if [[ -d ${componentPath}/_module/_configs ]] ; then
+	if [[ ! -d ${componentPath}/_configuration/_configs ]] ; then mkdir ${componentPath}/_configuration/_configs; fi
+	for f in ${componentPath}/_module/_configs/*
+	do
+		folderName="$(basename $f)"
+		if [[ ! -d ${componentPath}/_configuration/_configs/$folderName ]] ; then
+			mkdir ${componentPath}/_configuration/_configs/$folderName
+			cp -r ${componentPath}/_module/_configs/$folderName/* ${componentPath}/_configuration/_configs/$folderName
+		fi
+	done;
+fi
+
 chmod -R 777 $componentPath

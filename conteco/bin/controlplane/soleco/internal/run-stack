@@ -4,14 +4,13 @@ action="$2"
 component="$3"
 stackSelector="$4"
 
-echo "$imageName $action $component $stackSelector"
-
 folder="soleco"
-if [[ "$component" != "" ]] ; then folder="soleco/$component"; fi
+if [[ "$component" != "." ]] ; then folder="soleco/$component"; fi
 
 # local and global network prefix
 . set-config $imageName $component
 
+if [[ "$stackSelector" == "." ]] ; then stackSelector=""; fi
 if [[ "$stackSelector" != "" && "$stackSelector" != "_"* ]] ; then stackSelector=",$stackSelector"; fi
 
 tmpfilef=$(mktemp /tmp/extract-resource.XXXXXX)

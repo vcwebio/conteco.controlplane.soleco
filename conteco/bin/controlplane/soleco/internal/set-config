@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 imageName="$1"
 component="$2"
-
+if [[ "$component" == "." ]] ; then component=""; fi
 DOLLAR='$'
 # solution level config overrides component
 folder="soleco"
-. invoke-script $imageName ${folder}/configuration
+. invoke-script $imageName ${folder}/_solution/_configuration
 if [[ "$component" != "" ]] ; then folder="soleco/$component"; fi
-. invoke-script $imageName ${folder}/_component/configuration
+. invoke-script $imageName ${folder}/_component/_configuration
 
 # solutions have solution level configuration
 # use solution namespace suffix as prefix for local network and module prefix

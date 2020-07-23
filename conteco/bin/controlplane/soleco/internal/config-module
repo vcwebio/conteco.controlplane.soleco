@@ -7,7 +7,7 @@ if [[ "$component" != "" ]] ; then folder="soleco/$component"; fi
 componentPath="/conteco/pwd/${imageName}/${folder}"
 
 # set-config can only be used after config-volume
-. invoke-script $imageName "${folder}/_configuration/configuration"
+. invoke-script $imageName "${folder}/_configuration/_configuration"
 
 if [[ ! -d ${componentPath}/_module ]] ; then
 	mkdir ${componentPath}/_module
@@ -33,7 +33,7 @@ rm -rf $tmpFolder/volumes/packages > /dev/null 2>&1
 cp -r $tmpFolder/volumes/* ${componentPath}/_module > /dev/null 2>&1
 
 # copy module configuration files
-cp $tmpFolder/configuration ${componentPath}/_module/configuration
+cp $tmpFolder/configuration ${componentPath}/_module/_configuration
 cp $tmpFolder/module-stacks ${componentPath}/_module/stacks
 cp $tmpFolder/module-volumes ${componentPath}/_module/volumes
 cp $tmpFolder/module-volumes-initialised ${componentPath}/_module/volumes-initialised

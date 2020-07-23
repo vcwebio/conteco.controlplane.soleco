@@ -7,7 +7,7 @@ if [[ "$component" != "" ]] ; then folder="soleco/$component"; fi
 componentPath="/conteco/pwd/${imageName}/${folder}"
 
 # set-config can only be used after config-volume
-. invoke-script $imageName "${folder}/_configuration/configuration"
+. invoke-script $imageName "${folder}/_configuration/_configuration"
 
 if [[ ! -d ${componentPath}/_component ]] ; then
 	mkdir ${componentPath}/_component

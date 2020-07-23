@@ -3,8 +3,11 @@ method="$1"
 imageName="$2"
 component="$3"
 
-folder="soleco"
-if [[ "$component" != "" ]] ; then folder="soleco/$component"; fi
+if [[ "$component" == "." ]] ; then
+  folder="soleco";
+else
+  folder="soleco/$component";
+fi
 
 # execute local deploy script
 if [[ "$method" == *"down"* ]] ; then

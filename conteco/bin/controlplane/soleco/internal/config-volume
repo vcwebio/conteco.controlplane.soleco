@@ -8,8 +8,8 @@ if [[ "$component" != "" ]] ; then folder="soleco/$component"; fi
 componentPath="/conteco/pwd/${imageName}/${folder}"
 
 # generate _component/configuration
-cp "${componentPath}/_module/configuration" "${componentPath}/_component/configuration"
-cat "${componentPath}/_configuration/configuration" >> ${componentPath}/_component/configuration
+cp "${componentPath}/_module/_configuration" "${componentPath}/_component/_configuration"
+cat "${componentPath}/_configuration/_configuration" >> ${componentPath}/_component/_configuration
 
 if [[ -d ${componentPath}/_module/_configs ]] ; then
   rm -rf ${componentPath}/_component/_configs/*

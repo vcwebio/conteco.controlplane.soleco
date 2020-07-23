@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-imageName="$(echo "$1" | cut -d'|' -f 1)"
-component="$(echo "$1" | cut -d'|' -f 2)"
-shift
+imageName="$1"
+component="$2"
+stack="$3"
+method="$4"
 
-if [[ "$component" == "" ]] ; then
+if [[ "$component" == "." ]] ; then
   parent="soleco";
 else
   parent="soleco/$component";
@@ -14,6 +15,6 @@ for folder in $imageName/$parent/*
 do
   if [[ -d $folder ]] ;  then
     folderName="$(basename $folder)"
-    if [[ "$folderName" != "_"* ]] ; then $@ "$prefix$folderName" $imageName; fi
+    if [[ "$folderName" != "_"* ]] ; then run $method $prefix$folderName $stack $imageName; fi
   fi
 done

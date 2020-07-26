@@ -32,6 +32,11 @@ cat $tmpfilef | grep "$action" | grep "$stackSelector" | while read -r line ; do
 			composeFile="$stackFolder/$stack.docker-compose.yml"
 			. invoke-script $imageName "$stackFolder/settings.package"
 			. invoke-script $imageName "$stackFolder/settings"
+			if [[ "$action" == "start" ]] ; then
+				interactive="${stack^^}_COMMAND_INTERACTIVE"
+				command="${stack^^}_COMMAND"
+				if [[ "${!interactive}" == "true" ]]; then export ${stack^^}_COMMAND="'.invoke $* '"; fi
+			fi
 			extract-resource $imageName $composeFile $tmpfilep
 			cat $tmpfilep | envsubst > $tmpfile
 			cat $tmpfile

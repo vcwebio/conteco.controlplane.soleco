@@ -2,7 +2,8 @@
 imageName="$1"
 component="$2"
 stack="$3"
-method="$4"
+if [[ "$4" = "true" ]] ; then recurse="--recurse"; fi
+method="$5"
 
 if [[ "$component" == "." ]] ; then
   parent="soleco";
@@ -15,6 +16,6 @@ for folder in $imageName/$parent/*
 do
   if [[ -d $folder ]] ;  then
     folderName="$(basename $folder)"
-    if [[ "$folderName" != "_"* ]] ; then run $method $prefix$folderName $stack $imageName; fi
+    if [[ "$folderName" != "_"* ]] ; then run $method $prefix$folderName $stack $recurse $imageName; fi
   fi
 done

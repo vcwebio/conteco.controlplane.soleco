@@ -7,11 +7,12 @@
 
 	if [[ " up down downup local-up local-down local-downup --info " != *"$1"* ]] ; then method="up"; else method="$1"; shift; fi
 	if [[ "$1" != "-"* && "$1" != "$imageName" ]] ; then component="$1"; shift; fi
+	if [[ "$1" == "--recurse" ]] ; then recurse="true"; shift; else recurse="false"; fi
 
 	# if no component and first iteration, then execute repo script
 	if [[ "$component" = "" && " up down downup " == *"$method"* && "$SOLECO_CUSTOM_IMPLEMENTATION_TRIGGERED" != "true" ]] ; then
 		export SOLECO_CUSTOM_IMPLEMENTATION_TRIGGERED="true"
-  	if [[ "$method" == "down"* ]] ; then . invoke-script $imageName "soleco/_solution/remove" $method $@; else . invoke-script $imageName "soleco/_solution/deploy" $@; fi
+  	if [[ "$method" == "down"* ]] ; then . invoke-script $imageName "soleco/_controlplane/remove" $method $@; else . invoke-script $imageName "soleco/_controlplane/deploy" $@; fi
   else
 		if [[ "$component" == "" ]] ; then component="."; fi
 		case $method in
@@ -20,7 +21,7 @@
 			;;
 			down|downup|up)
 				deploy-component $method $imageName $component
-				if [[ "$1" == "--recurse" ]] ; then deploy-descendant $imageName $component deploy $method; fi
+				if [[ "$recurse" == "true" ]] ; then deploy-descendant $imageName $component $recurse deploy $method; fi
 			;;
 			local-down|local-downup|local-up)
 				deploy-component-local $method  $imageName $component

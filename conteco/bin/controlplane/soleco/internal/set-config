@@ -5,7 +5,7 @@ if [[ "$component" == "." ]] ; then component=""; fi
 DOLLAR='$'
 # solution level config overrides component
 folder="soleco"
-. invoke-script $imageName ${folder}/_solution/_configuration
+. invoke-script $imageName ${folder}/configuration
 if [[ "$component" != "" ]] ; then folder="soleco/$component"; fi
 . invoke-script $imageName ${folder}/_component/_configuration
 
@@ -23,3 +23,4 @@ export CONTECO_NETWORKGLOBAL="${CONTECO_NAME_CONTROLPLANE}"
 export CONTECO_NETWORKLOCAL="${prefix}${CONTECO_TYPE}_${CONTECO_NAME}${suffix}"
 export MODECO_MODULEPREFIX="${prefix}${CONTECO_TYPE}_${CONTECO_NAME}${suffix}"
 export MODECO_URLPREFIX="${CONTECO_TYPE}_${CONTECO_NAME}${urlSuffix}"
+export MODECO_STACKSCOPE="${prefix}${CONTECO_TYPE}_${CONTECO_NAME}${urlSuffix}"

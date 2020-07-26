@@ -4,19 +4,16 @@
 	. executionplane-invoke "$0 $@"
 	imageName="${@: -1}"
 	. invoke-script $imageName environment
-
-	if [[ $# -gt 2 ]] ; then component="${2}"; fi
-
-	command=$1
-	shift
+	command=$1; shift;
+	if [[ "$1" != "$imageName" ]] ; then component="$1"; shift; else component="."; fi
 	case $command in
 		all)
-			config build $@
+			if [[ "$component" == "." ]] ; then config build $imageName; fi
 			if [[  " backup " != *"$CONTECO_TYPE"* ]] ; then
-				config module $@
-				config component $@
-				config deploy $@
-				config volume $@
+				config module $component $imageName
+				config component $component $imageName
+				config deploy $component $imageName
+				config volume $component $imageName
 			fi
 		;;
 		component)

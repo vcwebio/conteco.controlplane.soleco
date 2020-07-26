@@ -4,7 +4,7 @@ imageName=$1
 component=$2
 
 folder="soleco"
-if [[ "$component" != "" ]] ; then folder="soleco/$component"; fi
+if [[ "$component" != "." ]] ; then folder="soleco/$component"; fi
 componentPath="/conteco/pwd/${imageName}/${folder}"
 
 # generate _component/configuration

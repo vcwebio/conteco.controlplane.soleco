@@ -3,25 +3,20 @@ imageName=$1
 component=$2
 
 folder="soleco"
-if [[ "$component" != "" ]] ; then folder="soleco/$component"; fi
+if [[ "$component" != "." ]] ; then folder="soleco/$component"; fi
 componentPath="/conteco/pwd/${imageName}/${folder}"
 
 # set-config can only be used after config-volume
 . invoke-script $imageName "${folder}/_configuration/_configuration"
 
-if [[ ! -d ${componentPath}/_module ]] ; then
-	mkdir ${componentPath}/_module
-fi
-if [[ ! -d ${componentPath}/_import ]] ; then
-	mkdir ${componentPath}/_import
-fi
+if [[ ! -d ${componentPath}/_module ]] ; then mkdir ${componentPath}/_module; fi
+if [[ ! -d ${componentPath}/_import ]] ; then mkdir ${componentPath}/_import; fi
 tmpFolder="${componentPath}/_import"
 
 # copy modeco folder from module
-moduleImage="${CONTECO_REGISTRY}${CONTECO_REALM_RUNTIME}/modeco.${SOLECO_MODULE}"
-if [[ "$SOLECO_MODULE_VERSION" != "" ]] ; then
-	moduleImage="${moduleImage}:${SOLECO_MODULE}"
-fi
+if [[ "$SOLECO_MODULE" == *"."*"."* ]] ; then moduleImage="${CONTECO_REGISTRY}${CONTECO_REALM_RUNTIME}/modeco_${SOLECO_MODULE}";
+else moduleImage="${CONTECO_REGISTRY}${CONTECO_REALM_RUNTIME}/modeco.${SOLECO_MODULE}"; fi
+if [[ "$SOLECO_MODULE_VERSION" != "" ]] ; then moduleImage="${moduleImage}:${SOLECO_MODULE_VERSION}"; fi
 docker run -v ${CONTECO_PWD_VOLUME}:/conteco/pwd $moduleImage --interactive cp -r /modeco/* $tmpFolder
 
 # copy module packages
@@ -43,11 +38,11 @@ cp $tmpFolder/module-volumes-initialised ${componentPath}/_module/volumes-initia
 IFS=$'\n' read -d '' -r -a volumes < ${componentPath}/_module/volumes-initialised
 for volumeSettings in ${volumes[@]};
 do
-	volumeName=$(echo $volumeSettings | cut -d':' -f 1)
-	if [[ ! -d ${componentPath}/_module/_configs ]] ; then mkdir ${componentPath}/_module/_configs; fi
+	volumeName=$(echo $volumeSettings | cut -d':' -f 1);
+	if [[ ! -d ${componentPath}/_module/_configs ]] ; then mkdir ${componentPath}/_module/_configs; fi;
 	if [[ -d $tmpFolder/configs/$volumeName ]] ; then
-		if [[ ! -d ${componentPath}/_module/_configs/$volumeName ]] ; then mkdir ${componentPath}/_module/_configs/$volumeName; fi
-		cp $tmpFolder/configs/$volumeName/* ${componentPath}/_module/_configs/$volumeName
+		if [[ ! -d ${componentPath}/_module/_configs/$volumeName ]] ; then mkdir ${componentPath}/_module/_configs/$volumeName; fi;
+		cp $tmpFolder/configs/$volumeName/* ${componentPath}/_module/_configs/$volumeName;
 	fi
 done;
 

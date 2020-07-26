@@ -8,18 +8,19 @@
 	method="$1"; shift;
 	if [[ "$1" != "-"* && "$1" != "$imageName" ]] ; then component="$1"; shift; fi
 	if [[ "$1" != "-"* && "$1" != "$imageName" ]] ; then stack="$1"; shift; fi
+	if [[ "$1" == "--recurse" ]] ; then recurse="true"; shift; else recurse="false"; fi
 
 	# if no component and first iteration, then execute repo script
 	if [[ "$component" = "" && " reboot restart " != *" $method"* && "$SOLECO_CUSTOM_IMPLEMENTATION_TRIGGERED" != "true" ]] ; then
 		export SOLECO_CUSTOM_IMPLEMENTATION_TRIGGERED="true"
-  	. invoke-script $imageName "soleco/_solution/$method" $@
+  	. invoke-script $imageName "soleco/_controlplane/$method" $@
   else
 		if [[ "$component" == "" ]] ; then component="."; fi
 		if [[ "$stack" == "" ]] ; then stack="."; fi
 		case $method in
 			boot|shutdown|start|stop)
 				run-stack $imageName $method $component $stack
-				if [[ "$1" == "--recurse" ]] ; then run-descendant $imageName $component $stack $method; fi
+				if [[ "$recurse" == "true" ]] ; then run-descendant $imageName $component $stack $recurse $method; fi
 			;;
 			pause)
 				executionplane-error "Method not implemented: $1."

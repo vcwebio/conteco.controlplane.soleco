@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 imageName="$1"
 component="$2"
-shift
-shift
+if [[ "$3" = "true" ]] ; then recurse="--recurse"; fi
+shift; shift; shift;
 if [[ "$component" == "." ]] ; then
   parent="soleco";
 else
@@ -14,6 +14,6 @@ for folder in $imageName/$parent/*
 do
   if [[ -d $folder ]] ;  then
     folderName="$(basename $folder)"
-    if [[ "$folderName" != "_"* ]] ; then $@ "$prefix$folderName" $imageName; fi
+    if [[ "$folderName" != "_"* ]] ; then $@ "$prefix$folderName" $recurse $imageName; fi
   fi
 done

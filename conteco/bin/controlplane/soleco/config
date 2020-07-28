@@ -37,7 +37,7 @@
 			config-descendant $imageName $component volume
 		;;
 		*)
-			.base config $command $@
+			.base config $command $component $@
     ;;
 	esac
   executionplane-complete

@@ -16,6 +16,13 @@ fi
 # copy module to component
 cp -r ${componentPath}/_module/* ${componentPath}/_component
 
+#extract-resource $imageName "${componentPath}/_component/stacks" $tmpfilef
+#cat $imageName/${componentPath}/_component/stacks | while read -r line ; do
+#		IFS=',' read -r -a columns <<< "$line"
+#		instance=${columns[2]}
+#		cp -r ${componentPath}/_module/$instance/* ${componentPath}/_component/$instance
+#done
+
 # put a copy of stacks in _configuration if none present
 if [[ ! -f ${componentPath}/_configuration/stacks ]] ; then
 	cp ${componentPath}/_module/stacks ${componentPath}/_configuration/stacks;

@@ -15,7 +15,11 @@ if [[ "${CONTECO_ECOSYSTEM_RUNTIME}" != "${CONTECO_NAME_CONTROLPLANE}" ]] ; then
   prefix="${CONTECO_ECOSYSTEM_RUNTIME:${#CONTECO_NAME_CONTROLPLANE}+1}_"
 fi
 if [[ "$component" != "" ]] ; then
-  suffix="$(echo "/$component" | tr '/' '_')"
+  if [[ "$SOLECO_NETWORKLOCAL_PARENT" == "true" ]] ; then
+    suffix="$(dirname "/$component" | tr '/' '_')"
+  else
+    suffix="$(echo "/$component" | tr '/' '_')"
+  fi
   urlSuffix="/$component";
 fi
 export MODECO_HOSTNAME="${SOLECO_HOSTNAME}"

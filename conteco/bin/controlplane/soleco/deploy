@@ -6,25 +6,33 @@
 	. invoke-script $imageName environment
 
 	if [[ " up down downup local-up local-down local-downup --info " != *"$1"* ]] ; then method="up"; else method="$1"; shift; fi
-	if [[ "$1" != "-"* && "$1" != "$imageName" ]] ; then component="$1"; shift; fi
-	if [[ "$1" == "--recurse" ]] ; then recurse="true"; shift; else recurse="false"; fi
 
 	# if no component and first iteration, then execute repo script
-	if [[ "$component" = "" && " up down downup " == *"$method"* && "$SOLECO_CUSTOM_IMPLEMENTATION_TRIGGERED" != "true" ]] ; then
+	if [[ " up down downup " == *"$method"* && "$SOLECO_CUSTOM_IMPLEMENTATION_TRIGGERED" != "true" ]] ; then
 		export SOLECO_CUSTOM_IMPLEMENTATION_TRIGGERED="true"
   	if [[ "$method" == "down"* ]] ; then . invoke-script $imageName "soleco/_controlplane/remove" $method $@; else . invoke-script $imageName "soleco/_controlplane/deploy" $@; fi
   else
-		if [[ "$component" == "" ]] ; then component="."; fi
 		case $method in
 			--info)
 				executionplane-error "No implementation for modeco deploy --info: $@"
 			;;
 			down|downup|up)
-				deploy-component $method $imageName $component
-				if [[ "$recurse" == "true" ]] ; then deploy-descendant $imageName $component $recurse deploy $method; fi
+				if [[ "$method" == *"down"* ]] ; then
+        	controlplane-service deploy "local-down" "$imageName"
+					deploy-networks down $imageName .
+				fi
+				if [[ "$method" == *"up"* ]] ; then
+					deploy-networks up $imageName .
+					controlplane-service deploy "local-up" "$imageName"
+				fi
 			;;
 			local-down|local-downup|local-up)
-				deploy-component-local $method  $imageName $component
+				if [[ "$method" == *"down"* ]] ; then
+				  . invoke-script $imageName soleco/_controlplane/remove-volumes "$imageName"
+				fi
+				if [[ "$method" == *"up"* ]] ; then
+				  . invoke-script $imageName soleco/_controlplane/deploy-volumes "$imageName"
+				fi
 			;;
 			*)
 				executionplane-error "invalid API method: $method"

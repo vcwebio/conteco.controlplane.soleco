@@ -16,9 +16,9 @@ fi
 # copy module to component
 cp -r ${componentPath}/_module/* ${componentPath}/_component
 
-# put copy of stacks in _configuration if none present
+# put a copy of stacks in _configuration if none present
 if [[ ! -f ${componentPath}/_configuration/stacks ]] ; then
-	cp ${componentPath}/_module/stacks ${componentPath}/_configuration/stacks
+	cp ${componentPath}/_module/stacks ${componentPath}/_configuration/stacks;
 fi
 
 # copy configs folder to _configuration if not present

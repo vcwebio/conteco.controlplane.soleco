@@ -13,12 +13,12 @@ if [[ "$component" == "." ]] ; then
   ######################################################
   # THIS FILE IS AUTO-GENERATED - PLEASE DO NOT CHANGE #
   ######################################################
-" > $imageName/soleco/_controlplane/deploy-volumes
+" >> $imageName/soleco/_controlplane/deploy-volumes
   echo "
   ######################################################
   # THIS FILE IS AUTO-GENERATED - PLEASE DO NOT CHANGE #
   ######################################################
-" > $imageName/soleco/_controlplane/remove-volumes
+" >> $imageName/soleco/_controlplane/remove-volumes
 else
   parent="soleco/$component";
   prefix="$component/"

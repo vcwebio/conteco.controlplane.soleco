@@ -17,6 +17,7 @@ fi
 if [[ "$component" != "" ]] ; then
   if [[ "$SOLECO_NETWORKLOCAL_PARENT" == "true" ]] ; then
     suffix="$(dirname "/$component" | tr '/' '_')"
+    if [[ "$suffix" == "_" ]] ; then suffix=""; fi
   else
     suffix="$(echo "/$component" | tr '/' '_')"
   fi

@@ -2,7 +2,6 @@
 shopt -s nullglob
 component=$1
 imageName=$2
-echo "config-solution $@"
 
 if [[ "$component" == "." ]] ; then
   parent="soleco";

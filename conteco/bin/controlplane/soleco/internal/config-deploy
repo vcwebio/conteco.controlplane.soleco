@@ -42,11 +42,11 @@ for volumeSettings in ${volumes[@]};
 do
 	volumeName=$(echo $volumeSettings | cut -d':' -f 1)
 	volumeDir=$(echo $volumeSettings | cut -d':' -f 2)
-	if [[ -d "$basePath/${volumeName}" ]] ; then
-		echo "executionplane --silent docker run -v ${MODECO_MODULEPREFIX}_${volumeName}:${volumeDir} ${DOLLAR}{CONTECO_REGISTRY}${DOLLAR}1 --interactive cp -r /${folder}/_component/${volumeName}/* ${volumeDir}
+	if [[ -d "$basePath/_volumes/${volumeName}" ]] ; then
+		echo "executionplane --silent docker run -v ${MODECO_MODULEPREFIX}_${volumeName}:${volumeDir} ${DOLLAR}{CONTECO_REGISTRY}${DOLLAR}1 --interactive cp -r /${folder}/_component/_volumes/${volumeName}/* ${volumeDir}
 		" >> $basePath/deploy-local-up
 	else
-		echo "executionplane --silent docker run -v ${MODECO_MODULEPREFIX}_${volumeName}:${volumeDir} ${DOLLAR}{CONTECO_REGISTRY}${DOLLAR}1 --interactive tar -C / -xvf /${folder}/_component/${volumeName}.tar
+		echo "executionplane --silent docker run -v ${MODECO_MODULEPREFIX}_${volumeName}:${volumeDir} ${DOLLAR}{CONTECO_REGISTRY}${DOLLAR}1 --interactive tar -C / -xvf /${folder}/_component/_volumes/${volumeName}.tar
 		" >> $basePath/deploy-local-up
 	fi
 done;

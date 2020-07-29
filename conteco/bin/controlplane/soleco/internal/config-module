@@ -25,7 +25,8 @@ cp -r $tmpFolder/packages/*/* ${componentPath}/_module > /dev/null 2>&1
 
 # copy module volumes
 rm -rf $tmpFolder/volumes/packages > /dev/null 2>&1
-cp -r $tmpFolder/volumes/* ${componentPath}/_module > /dev/null 2>&1
+mkdir ${componentPath}/_module/_volumes
+cp -r $tmpFolder/volumes/* ${componentPath}/_module/_volumes > /dev/null 2>&1
 
 # copy module configuration files
 cp $tmpFolder/configuration ${componentPath}/_module/_configuration

@@ -25,12 +25,28 @@ if [[ -d ${componentPath}/_module/_configs ]] ; then
   done;
 fi
 
+if [[ -d ${componentPath}/_module/_volumes ]] ; then
+  rm -rf ${componentPath}/_component/_volumes/*
+  for f in ${componentPath}/_module/_volumes/*
+	do
+    folderName="$(basename $f)"
+    mkdir ${componentPath}/_component/_volumes/$folderName
+    if [[ -d ${componentPath}/_configuration/_volumes/$folderName ]] ; then
+      cp ${componentPath}/_configuration/_volumes/$folderName/* ${componentPath}/_component/_volumes/$folderName
+    else
+      cp ${componentPath}/_module/_volumes/$folderName/* ${componentPath}/_component/_volumes/$folderName
+    fi
+  done;
+fi
+
 . set-config $imageName $component
+
+# REPLACE _component VOLUMES WITH _configuration VOLUMES
 
 
 # apply environment variables to all volume files
 sourcePath="${componentPath}/_component/_configs"
-destinationPath="${componentPath}/_component"
+destinationPath="${componentPath}/_component/_volumes"
 IFS=$'\n' read -d '' -r -a volumes < $componentPath/_component/volumes-initialised
 for volumeSettings in ${volumes[@]};
 do

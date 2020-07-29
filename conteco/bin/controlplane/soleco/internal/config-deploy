@@ -6,7 +6,15 @@ folder="soleco"
 if [[ "$component" != "." ]] ; then folder="soleco/$component"; fi
 componentPath="/conteco/pwd/${imageName}/${folder}"
 
+# generate _component/configuration
+cp "${componentPath}/_module/_configuration" "${componentPath}/_component/_configuration"
+cat "${componentPath}/_configuration/_configuration" >> ${componentPath}/_component/_configuration
+
 . set-config $imageName $component
+
+folder="soleco"
+if [[ "$component" != "." ]] ; then folder="soleco/$component"; fi
+componentPath="/conteco/pwd/${imageName}/${folder}"
 
 DOLLAR='$'
 basePath="$componentPath/_component"

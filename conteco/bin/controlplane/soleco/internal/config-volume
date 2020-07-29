@@ -29,12 +29,17 @@ if [[ -d ${componentPath}/_module/_volumes ]] ; then
   rm -rf ${componentPath}/_component/_volumes/*
   for f in ${componentPath}/_module/_volumes/*
 	do
-    folderName="$(basename $f)"
-    mkdir ${componentPath}/_component/_volumes/$folderName
-    if [[ -d ${componentPath}/_configuration/_volumes/$folderName ]] ; then
-      cp ${componentPath}/_configuration/_volumes/$folderName/* ${componentPath}/_component/_volumes/$folderName
+    itemName="$(basename $f)"
+    if [[ ${componentPath}/_configuration/_volumes/$itemName ]] ; then
+      source="${componentPath}/_configuration/_volumes"
     else
-      cp ${componentPath}/_module/_volumes/$folderName/* ${componentPath}/_component/_volumes/$folderName
+      source="${componentPath}/_module/_volumes"
+    fi
+    if [[ -d $source/$itemName ]] ; then
+      mkdir ${componentPath}/_component/_volumes/$itemName
+      cp $source/$itemName/* ${componentPath}/_component/_volumes/$itemName
+    else
+      cp $source/$itemName ${componentPath}/_component/_volumes/$itemName
     fi
   done;
 fi
@@ -63,9 +68,23 @@ do
 			  else
 					for h in $g/*
 					do
-						level3="$(basename $h)"
-						if [[ -f $h ]] ; then cat $h | envsubst > $destinationPath/$volumeName/$level1/$level2/$level3;
-						else executionplane-error "$h: Environment variable substitution only up to 2 folder levels deep!"; fi
+            level3="$(basename $h)"
+    				if [[ -f $h ]] ; then cat $h | envsubst > $destinationPath/$volumeName/$level1/$level2/$level3;
+    			  else
+    					for k in $h/*
+    					do
+                level4="$(basename $k)"
+        				if [[ -f $k ]] ; then cat $k | envsubst > $destinationPath/$volumeName/$level1/$level2/$level3/$level4;
+        			  else
+        					for l in $k/*
+        					do
+        						level5="$(basename $l)"
+        						if [[ -f $l ]] ; then cat $l | envsubst > $destinationPath/$volumeName/$level1/$level2/$level3/$level4/$level5;
+                  else executionplane-error "$l: Environment variable substitution only up to 3 folder levels deep!"; fi
+        				  done;
+        				fi
+    				  done;
+    				fi
 				  done;
 				fi
 		  done;

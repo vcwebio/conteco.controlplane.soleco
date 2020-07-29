@@ -42,7 +42,7 @@ if [[ -d ${componentPath}/_module/_volumes ]] ; then
 		if [[ -f $f ]] ; then
 			fileName="$(basename $f)"
 			if [[ ! -f ${componentPath}/_configuration/_volumes/$ileName ]] ; then
-				cp ${componentPath}/_module/_volumes/$fileName/* ${componentPath}/_configuration/_volumes/$fileName
+				cp ${componentPath}/_module/_volumes/$fileName ${componentPath}/_configuration/_volumes/$fileName
 			fi
 		else
 			folderName="$(basename $f)"

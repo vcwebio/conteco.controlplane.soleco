@@ -19,7 +19,7 @@
 		if [[ "$stack" == "" ]] ; then stack="."; fi
 		case $method in
 			boot|shutdown|start|stop)
-				run-stack $imageName $method $component $stack
+				run-stack $imageName $method $component $stack ${@:1:$#-1}
 				if [[ "$recurse" == "true" ]] ; then run-descendant $imageName $component $stack $recurse $method; fi
 			;;
 			pause)

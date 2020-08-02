@@ -3,7 +3,7 @@ imageName="$1"
 action="$2"
 component="$3"
 stackSelector="$4"
-
+shift; shift; shift; shift;
 folder="soleco"
 if [[ "$component" != "." ]] ; then folder="soleco/$component"; fi
 

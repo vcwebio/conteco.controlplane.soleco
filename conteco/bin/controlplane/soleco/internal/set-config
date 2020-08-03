@@ -3,11 +3,6 @@ imageName="$1"
 component="$2"
 if [[ "$component" == "." ]] ; then component=""; fi
 DOLLAR='$'
-# solution level config overrides component
-folder="soleco"
-. invoke-script $imageName ${folder}/configuration
-if [[ "$component" != "" ]] ; then folder="soleco/$component"; fi
-. invoke-script $imageName ${folder}/_component/_configuration
 
 # solutions have solution level configuration
 # use solution namespace suffix as prefix for local network and module prefix
@@ -29,3 +24,9 @@ export CONTECO_NETWORKLOCAL="${prefix}${CONTECO_TYPE}_${CONTECO_NAME}${suffix}"
 export MODECO_MODULEPREFIX="${prefix}${CONTECO_TYPE}_${CONTECO_NAME}${suffix}"
 export MODECO_URLPREFIX="${CONTECO_TYPE}_${CONTECO_NAME}${urlSuffix}"
 export MODECO_STACKSCOPE="${prefix}${CONTECO_TYPE}_${CONTECO_NAME}${urlSuffix}"
+
+# solution level config overrides component
+folder="soleco"
+. invoke-script $imageName ${folder}/configuration
+if [[ "$component" != "" ]] ; then folder="soleco/$component"; fi
+. invoke-script $imageName ${folder}/_component/_configuration

@@ -15,6 +15,8 @@ if [[ -f ${componentPath}/_configuration/stacks ]] ; then cp ${componentPath}/_c
 if [[ -f ${componentPath}/_configuration/volumes ]] ; then cp ${componentPath}/_configuration/volumes ${componentPath}/_component/volumes; fi
 if [[ -f ${componentPath}/_configuration/volumes-initialised ]] ; then cp ${componentPath}/_configuration/volumes-initialised ${componentPath}/_component/volumes-initialised; fi
 
+if [[ -d ${componentPath}/_configuration/_volumes ]] ; then cp -r ${componentPath}/_configuration/_volumes/* ${componentPath}/_component/_volumes; fi
+
 . set-config $imageName $component
 
 folder="soleco"

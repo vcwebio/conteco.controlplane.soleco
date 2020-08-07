@@ -17,6 +17,7 @@ tmpFolder="${componentPath}/_import"
 if [[ "$SOLECO_MODULE" == *"."*"."* ]] ; then moduleImage="${CONTECO_REGISTRY}${CONTECO_REALM_RUNTIME}/modeco_${SOLECO_MODULE}";
 else moduleImage="${CONTECO_REGISTRY}${CONTECO_REALM_RUNTIME}/modeco.${SOLECO_MODULE}"; fi
 if [[ "$SOLECO_MODULE_VERSION" != "" ]] ; then moduleImage="${moduleImage}:${SOLECO_MODULE_VERSION}"; fi
+
 docker run -v ${CONTECO_PWD_VOLUME}:/conteco/pwd $moduleImage --interactive cp -r /modeco/* $tmpFolder
 
 # copy module packages

@@ -25,7 +25,11 @@ cat $tmpfilef | grep "$action" | grep "$stackSelector" | while read -r line ; do
 		stack=${columns[3]}
 		export CONTECO_STACKPREFIX="${MODECO_MODULEPREFIX}_$instance"
 		stackName="${MODECO_MODULEPREFIX}_${stack}"
-		if (( ${#stackName} > 63 )) ; then let "excess = ${#stackName} - 58 - ${#MODECO_MODULEPREFIX}"; stackName="${MODECO_MODULEPREFIX}_X_${stackName:excess:${#stackName}}"; echo "$newStackName"; fi;
+		if (( ${#stackName} > 50 )) ; then
+			let "excess = ${#stackName} - 45 - ${#MODECO_MODULEPREFIX}";
+			stackName="${MODECO_MODULEPREFIX}_X_${stackName:excess:${#stackName}}";
+			export CONTECO_STACKPREFIX="${MODECO_MODULEPREFIX}_X_${instance:excess:${#instance}}";
+		fi;
 		if [[ " boot start " == *" $action"* ]] ; then
 			export CONTECO_URLPREFIX="${MODECO_URLPREFIX}/${instance}"
 			tmpfilep=$(mktemp /tmp/docker-compose.yml.XXXXXX)

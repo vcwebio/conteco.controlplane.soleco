@@ -10,6 +10,9 @@ componentPath="/conteco/pwd/${imageName}/${folder}"
 cp "${componentPath}/_module/_configuration" "${componentPath}/_component/_configuration"
 cat "${componentPath}/_configuration/_configuration" >> ${componentPath}/_component/_configuration
 
+# use _configuration stack definition if it exists
+if [[ -f ${componentPath}/_configuration/stacks ]] ; then cp ${componentPath}/_configuration/stacks ${componentPath}/_component/stacks; fi
+
 . set-config $imageName $component
 
 folder="soleco"

@@ -18,8 +18,8 @@ cp -r ${componentPath}/_module/* ${componentPath}/_component
 
 # put a copy of stacks, volumes and volumes-initialised in _configuration if none present
 if [[ ! -f ${componentPath}/_configuration/stacks ]] ; then cp ${componentPath}/_module/stacks ${componentPath}/_configuration/stacks; fi
-if [[ ! -f ${componentPath}/_configuration/volumes ]] ; then cp ${componentPath}/_module/stacks ${componentPath}/_configuration/volumes; fi
-if [[ ! -f ${componentPath}/_configuration/volumes-initialised ]] ; then cp ${componentPath}/_module/stacks ${componentPath}/_configuration/volumes-initialised; fi
+if [[ ! -f ${componentPath}/_configuration/volumes ]] ; then cp ${componentPath}/_module/volumes ${componentPath}/_configuration/volumes; fi
+if [[ ! -f ${componentPath}/_configuration/volumes-initialised ]] ; then cp ${componentPath}/_module/volumes-initialised ${componentPath}/_configuration/volumes-initialised; fi
 
 # copy _configs folder to _configuration if not present
 if [[ -d ${componentPath}/_module/_configs ]] ; then

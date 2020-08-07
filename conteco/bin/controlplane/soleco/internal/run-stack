@@ -24,6 +24,8 @@ cat $tmpfilef | grep "$action" | grep "$stackSelector" | while read -r line ; do
 		instance=${columns[2]}
 		stack=${columns[3]}
 		export CONTECO_STACKPREFIX="${MODECO_MODULEPREFIX}_$instance"
+		stackName="${MODECO_MODULEPREFIX}_${stack}"
+		if (( ${#stackName} > 63 )) ; then let "excess = ${#stackName} - 58 - ${#MODECO_MODULEPREFIX}"; stackName="${MODECO_MODULEPREFIX}_X_${stackName:excess:${#stackName}}"; echo "$newStackName"; fi;
 		if [[ " boot start " == *" $action"* ]] ; then
 			export CONTECO_URLPREFIX="${MODECO_URLPREFIX}/${instance}"
 			tmpfilep=$(mktemp /tmp/docker-compose.yml.XXXXXX)
@@ -40,11 +42,11 @@ cat $tmpfilef | grep "$action" | grep "$stackSelector" | while read -r line ; do
 			extract-resource $imageName $composeFile $tmpfilep
 			cat $tmpfilep | envsubst > $tmpfile
 			cat $tmpfile
-			executionplane  docker stack deploy -c $tmpfile "${MODECO_MODULEPREFIX}_${stack}"
+			executionplane  docker stack deploy -c $tmpfile "$stackName"
 			rm $tmpfilep
 			rm $tmpfile
 		elif [[ " shutdown stop " == *" $action"* ]] ; then
-			executionplane docker stack rm "${MODECO_MODULEPREFIX}_${stack}"
+			executionplane docker stack rm "$stackName"
 		fi
 		)
 done

@@ -12,6 +12,8 @@ cat "${componentPath}/_configuration/_configuration" >> ${componentPath}/_compon
 
 # use _configuration stack definition if it exists
 if [[ -f ${componentPath}/_configuration/stacks ]] ; then cp ${componentPath}/_configuration/stacks ${componentPath}/_component/stacks; fi
+if [[ -f ${componentPath}/_configuration/volumes ]] ; then cp ${componentPath}/_configuration/volumes ${componentPath}/_component/volumes; fi
+if [[ -f ${componentPath}/_configuration/volumes-initialised ]] ; then cp ${componentPath}/_configuration/volumes-initialised ${componentPath}/_component/volumes-initialised; fi
 
 . set-config $imageName $component
 

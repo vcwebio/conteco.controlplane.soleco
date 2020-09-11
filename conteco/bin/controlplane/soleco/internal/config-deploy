@@ -5,6 +5,7 @@ component=$2
 folder="soleco"
 if [[ "$component" != "." ]] ; then folder="soleco/$component"; fi
 componentPath="/conteco/pwd/${imageName}/${folder}"
+basePath="$componentPath/_component"
 
 # generate _component/configuration
 cp "${componentPath}/_module/_configuration" "${componentPath}/_component/_configuration"
@@ -19,12 +20,7 @@ if [[ -d ${componentPath}/_configuration/_volumes ]] ; then cp -r ${componentPat
 
 . set-config $imageName $component
 
-folder="soleco"
-if [[ "$component" != "." ]] ; then folder="soleco/$component"; fi
-componentPath="/conteco/pwd/${imageName}/${folder}"
-
 DOLLAR='$'
-basePath="$componentPath/_component"
 echo $'#!/usr/bin/env bash\n\n' > $basePath/deploy-local-down
 echo $'#!/usr/bin/env bash\n\n' > $basePath/deploy-local-up
 

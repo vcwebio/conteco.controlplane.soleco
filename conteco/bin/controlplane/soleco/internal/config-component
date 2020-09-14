@@ -28,10 +28,7 @@ if [[ -d ${componentPath}/_module/_configs ]] ; then
 	for f in ${componentPath}/_module/_configs/*
 	do
 		folderName="$(basename $f)"
-		if [[ ! -d ${componentPath}/_configuration/_configs/$folderName ]] ; then
-			mkdir ${componentPath}/_configuration/_configs/$folderName
-			cp -r ${componentPath}/_module/_configs/$folderName/* ${componentPath}/_configuration/_configs/$folderName
-		fi
+		if [[ ! -d ${componentPath}/_configuration/_configs/$folderName ]] ; then cp -r ${componentPath}/_module/_configs/$folderName ${componentPath}/_configuration/_configs; fi
 	done;
 fi
 
@@ -47,10 +44,7 @@ if [[ -d ${componentPath}/_module/_volumes ]] ; then
 			fi
 		else
 			folderName="$(basename $f)"
-			if [[ ! -d ${componentPath}/_configuration/_volumes/$folderName ]] ; then
-				mkdir ${componentPath}/_configuration/_volumes/$folderName
-				cp -r ${componentPath}/_module/_volumes/$folderName/* ${componentPath}/_configuration/_volumes/$folderName
-			fi
+			if [[ ! -d ${componentPath}/_configuration/_volumes/$folderName ]] ; then cp -r ${componentPath}/_module/_volumes/$folderName ${componentPath}/_configuration/_volumes; fi
 		fi
 	done;
 fi

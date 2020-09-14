@@ -17,11 +17,8 @@ if [[ -d ${componentPath}/_module/_configs ]] ; then
 	do
     folderName="$(basename $f)"
     mkdir ${componentPath}/_component/_configs/$folderName
-    if [[ -d ${componentPath}/_configuration/_configs/$folderName ]] ; then
-      cp ${componentPath}/_configuration/_configs/$folderName/* ${componentPath}/_component/_configs/$folderName
-    else
-      cp ${componentPath}/_module/_configs/$folderName/* ${componentPath}/_component/_configs/$folderName
-    fi
+    if [[ -d ${componentPath}/_configuration/_configs/$folderName ]] ; then cp -r ${componentPath}/_configuration/_configs/$folderName ${componentPath}/_component/_configs;
+    else cp -r ${componentPath}/_module/_configs/$folderName ${componentPath}/_component/_configs; fi
   done;
 fi
 
@@ -30,17 +27,10 @@ if [[ -d ${componentPath}/_module/_volumes ]] ; then
   for f in ${componentPath}/_module/_volumes/*
 	do
     itemName="$(basename $f)"
-    if [[ ${componentPath}/_configuration/_volumes/$itemName ]] ; then
-      source="${componentPath}/_configuration/_volumes"
-    else
-      source="${componentPath}/_module/_volumes"
-    fi
-    if [[ -d $source/$itemName ]] ; then
-      mkdir ${componentPath}/_component/_volumes/$itemName
-      cp $source/$itemName/* ${componentPath}/_component/_volumes/$itemName
-    else
-      cp $source/$itemName ${componentPath}/_component/_volumes/$itemName
-    fi
+    if [[ ${componentPath}/_configuration/_volumes/$itemName ]] ; then source="${componentPath}/_configuration/_volumes";
+    else source="${componentPath}/_module/_volumes"; fi
+    if [[ -d $source/$itemName ]] ; then cp -r $source/$itemName ${componentPath}/_component/_volumes;
+    else cp -r $source/$itemName ${componentPath}/_component/_volumes/$itemName; fi
   done;
 fi
 

@@ -42,10 +42,7 @@ for volumeSettings in ${volumes[@]};
 do
 	volumeName=$(echo $volumeSettings | cut -d':' -f 1);
 	if [[ ! -d ${componentPath}/_module/_configs ]] ; then mkdir ${componentPath}/_module/_configs; fi;
-	if [[ -d $tmpFolder/configs/$volumeName ]] ; then
-		if [[ ! -d ${componentPath}/_module/_configs/$volumeName ]] ; then mkdir ${componentPath}/_module/_configs/$volumeName; fi;
-		cp $tmpFolder/configs/$volumeName/* ${componentPath}/_module/_configs/$volumeName;
-	fi
+	if [[ -d $tmpFolder/configs/$volumeName ]] ; then cp -r $tmpFolder/configs/$volumeName ${componentPath}/_module/_configs; fi
 done;
 
 rm -rf $tmpFolder
